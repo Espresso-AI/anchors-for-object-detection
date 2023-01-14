@@ -65,7 +65,7 @@ Note that the important thing is that anchor priors and anchors can be generated
   
 
 ## Anchor-Assigner
-It is very necessary to map the predictions and target labels for obtaining the detection models' loss. Anchor-Assigner object assigns targets to the anchors, and then return indices of target-assigned anchors and lables of assigned targets.
+It is very necessary to map the predictions and target labels for obtaining the detection models' loss. Anchor-Assigner assigns targets to the anchors, and then return indices of target-assigned anchors and lables of assigned targets.  
   
 This implementation can be commonly applied to all series of detection models.
 
