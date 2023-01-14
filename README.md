@@ -60,10 +60,8 @@ anchors = ssd_anchors(img_size, anchor_sizes, upper_sizes, strides, num_anchors)
 pred[..., :2] = anchors[..., :2] + (center_variance * pred[..., :2] * anchors[..., 2:])
 pred[..., 2:4] = torch.exp(size_variance * pred[..., 2:4]) * anchors[..., 2:]
 ```
-
-Note that the important thing is that anchor priors and anchors can be generated seperately. The above cases are merely examples that are generally used.  
   
-
+  
 ## Anchor-Assigner
 It is very necessary to map the predictions and target labels for obtaining the detection models' loss. Anchor-Assigner assigns targets to the anchors, and then return indices of target-assigned anchors and lables of assigned targets.  
   
