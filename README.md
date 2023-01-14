@@ -1,8 +1,35 @@
 ## Anchors for Object Detections
 
-### Anchor-Maker
-Generate anchors to combine with regression predictions of a model. For other cases, check [here](https://github.com/hotcouscous1/Anchors-for-Object-Detection/issues/1).
+## Anchor-Maker
+Anchor-based detection models have been mainly developed over four series.
+- Faster R-CNN
+- YOLO
+- RetinaNet
+- SSD
 
+Each anchor-based detection model series has a different manners of creating anchor priors, creating anchors, and combining them with the model's regression predictions.
+Despite slight variations from model to model, models included in a series basically share the same manners.
+
+Now let's see the examples of how Anchor-Maker gives its anchors to models 🔥
+
+### YOLO
+```python
+img_size = 416
+anchor_sizes = [
+    [(10, 13), (16, 30), (33, 23)], 
+    [(30, 61), (62, 45), (59, 119)], 
+    [(116, 90), (156, 198), (373, 326)]
+]
+strides = [8, 16, 32]
+anchors = yolo_anchors(img_size, anchor_sizes, strides)
+
+for i, s in enumerate(strides):
+    pred[i][..., :2] = torch.sigmoid(pred[i][..., :2]) * s + anchors[i][..., :2]
+    pred[i][..., 2:4] = torch.exp(pred[i][..., 2:4]) * anchors[i][..., 2:]
+```
+Here, we should note that in YOLO, unlike the others, anchors and model predictions are a list of tensors on each stride, not tensors flattened over given strides.
+
+### RetinaNet
 ```python
 img_size = 608
 anchor_sizes = [32, 64, 128, 256, 512]
@@ -16,8 +43,27 @@ pred[..., :2] = anchors[..., :2] + (pred[..., :2] * anchors[..., 2:])
 pred[..., 2:4] = torch.exp(pred[..., 2:4]) * anchors[..., 2:]
 ```
 
-### Anchor-Assigner
+### SSD
+```python
+img_size = 300
+anchor_sizes = [21, 45, 99, 153, 207, 261]
+upper_sizes = [45, 99, 153, 207, 261, 315]
+strides = [8, 16, 32, 64, 100, 300]
+num_anchors = [4, 6, 6, 6, 4, 4]
+
+anchors = ssd_anchors(img_size, anchor_sizes, upper_sizes, strides, num_anchors)
+
+pred[..., :2] = anchors[..., :2] + (center_variance * pred[..., :2] * anchors[..., 2:])
+pred[..., 2:4] = torch.exp(size_variance * pred[..., 2:4]) * anchors[..., 2:]
+```
+
+Note that the important thing is that anchor priors and anchors can be generated seperately. The above cases are merely examples that are generally used.  
+
+
+## Anchor-Assigner
 Assign targets to the anchors, and then return indices of target-assigned anchors and lables of assigned targets.
+It is very necessary to map the predictions and target labels, for obtaining the detection models' loss.  
+This implementation can be commonly applied to all series of detection models.
 
 ```python
 assigner = retinanet_assigner(0.5, 0.4)
@@ -32,4 +78,4 @@ for pred, assign in zip(preds, assigns):
 ``` 
 
 ## License
-BSD 3-Clause License Copyright (c) 2022, hotcouscous1
+BSD 3-Clause License Copyright (c) 2022, Kwon Taewan
