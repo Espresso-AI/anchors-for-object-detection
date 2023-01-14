@@ -1,6 +1,6 @@
 # Anchors for Object Detections
 This repo has two purposes.
-1. generate anchors for prediction
+1. generate anchors for one-stage detection models' prediction
 2. assign targets to the anchors for obtaining the loss 
   
   
