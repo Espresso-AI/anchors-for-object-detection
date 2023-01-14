@@ -1,6 +1,6 @@
 # Anchors for Object Detections
 
-## Anchor-Maker
+### Anchor-Maker
 Anchor-based detection models have been mainly developed over four series.
 - Faster R-CNN
 - YOLO
@@ -60,7 +60,7 @@ pred[..., 2:4] = torch.exp(size_variance * pred[..., 2:4]) * anchors[..., 2:]
 Note that the important thing is that anchor priors and anchors can be generated seperately. The above cases are merely examples that are generally used.  
 
 
-## Anchor-Assigner
+### Anchor-Assigner
 Assign targets to the anchors, and then return indices of target-assigned anchors and lables of assigned targets.
 It is very necessary to map the predictions and target labels, for obtaining the detection models' loss.  
 This implementation can be commonly applied to all series of detection models.
